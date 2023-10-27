@@ -7,7 +7,7 @@ int main()
 	FILE* ptr;
 	char ch;
 
-	// Opening file in read mode
+	// Edit your directory here for now 
 	ptr = fopen("C:\\Users\\joelc\\Downloads\\C Programming Files\\FruitPrice.txt", "r");
 
 	if (NULL == ptr) {
