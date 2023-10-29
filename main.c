@@ -11,6 +11,8 @@ struct records {
     float salary;
 };
 
+struct records db[MAX_RECORDS];
+
 void insertRecord(FILE *file) {
 }
 
@@ -21,11 +23,10 @@ void queryRecord(FILE *file) {
 }
 
 void updateRecord(FILE *file) {
-
 }
 
 void viewRecords() {
-    struct records db[MAX_RECORDS];
+
     printf("There are in total %d records found:\n",records);
     for (int i = 0; i < records; i++) {
         printf("%s %.2f", db[i].occupation,db[i].salary);
@@ -33,7 +34,6 @@ void viewRecords() {
 }
 
 void openRecords(FILE *file) {
-    struct records db[MAX_RECORDS];
     int i = 0;
     while (fscanf(file, "%255[^\t] %f",db[i].occupation,&db[i].salary) == 2) {
         i++;
@@ -75,6 +75,7 @@ int main() {
                 }
             // OPTION 2: SHOW ALL
             } else if (strcmp(token, "SHOW") == 0) {
+                token = strtok(NULL, " ");
                 if (token != NULL && strcmp(token, "ALL") == 0) {
                     if (file == NULL) {
                         printf("Select a file first.");
@@ -85,14 +86,7 @@ int main() {
                     printf("Unknown command");
                 }
             } else if (strcmp(token, "INSERT") == 0) {
-                char *key;
-                char *value;
-                key = strtok(NULL, " ");
-                value = strtok(NULL, " ");
-                insertRecord(key,value);
-
-            } else {
-                printf("Unknown command.");
+                printf("OK.");
             }
         } else {
             printf("No input found.");
