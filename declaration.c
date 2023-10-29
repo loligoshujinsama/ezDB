@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int main()
+void main()
 {
     int width = 80;
     char *string = "Declaration";
@@ -26,6 +26,4 @@ int main()
     printf("Team members: \n");
     printf("1. Brandon Koh Lin Xi\n2. Joel Chan Wen Jun\n3. Muhammad Hazley Bin Samsudin\n4. Lucas Koh Shoo\n5. Christopher Yong Wei Jie\n");
     printf("Date: (please insert the date when you submit your group project). \n"); // rmb to insert date of submission
-  
-    return 0;
 }
