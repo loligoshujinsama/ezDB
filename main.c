@@ -3,11 +3,13 @@
 #include <string.h>
 #include "declaration.c"
 
+#define MAX_RECORDS 255
+int records = 0;
 
-typedef struct {
+struct records {
     char occupation[256];
     float salary;
-} Record;
+};
 
 void insertRecord(FILE *file) {
 }
@@ -19,22 +21,24 @@ void queryRecord(FILE *file) {
 }
 
 void updateRecord(FILE *file) {
+
 }
 
-void showallRecords(FILE *file) {
-    Record db;
-    rewind(file); 
-    int sum=0;
-
-    char temp_1[256];
-    while (fgets(temp_1, sizeof(temp_1), file) != NULL) {
-        // Can be improved
-        if (sscanf(temp_1, "%99[^0-9]\t%f",db.occupation,&db.salary) == 2) {
-            printf("Job Title: %s, Salary: %.2f\n", db.occupation, db.salary);
-            sum++;
-        }
+void viewRecords() {
+    struct records db[MAX_RECORDS];
+    printf("There are in total %d records found:\n",records);
+    for (int i = 0; i < records; i++) {
+        printf("%s %.2f", db[i].occupation,db[i].salary);
     }
-    printf("Total records: %d\n",sum);
+}
+
+void openRecords(FILE *file) {
+    struct records db[MAX_RECORDS];
+    int i = 0;
+    while (fscanf(file, "%255[^\t] %f",db[i].occupation,&db[i].salary) == 2) {
+        i++;
+    }
+    records = i; 
 }
 
 
@@ -42,10 +46,10 @@ int main() {
     FILE *file = NULL;
     char command[256];
     declaration();
-    printf("Welcome to ezDB v1.0.1\n");
+    printf("Welcome to ezDB v1.0.1");
 
     while (1) {
-        printf("> ");
+        printf("\n> ");
         fgets(command,sizeof(command),stdin);
         command[strcspn(command, "\n")] = '\0';
 
@@ -55,36 +59,43 @@ int main() {
             // OPTION 1: OPEN
             if (strcmp(token,"OPEN") == 0) {
                 char *filename = strtok(NULL, " ");
+
                 if (file != NULL) {
                     fclose(file);
                     file = NULL;
-                    printf("Closing existing file... Run command again.\n");
+                    printf("Closing existing file... Run command again.");
                 } else {
                     file = fopen(filename, "ab+");
                     if (file == NULL) {
-                        printf("Error opening file\n");
+                        printf("Error opening file");
                     } else {
-                        printf("Working on database file: %s\n",filename);
+                        printf("Working on database file: %s",filename);
+                        openRecords(file);
                     }
                 }
             // OPTION 2: SHOW ALL
             } else if (strcmp(token, "SHOW") == 0) {
-                token = strtok(NULL, " ");
                 if (token != NULL && strcmp(token, "ALL") == 0) {
                     if (file == NULL) {
-                        printf("Select a file first.\n");
+                        printf("Select a file first.");
                     } else {
-                        printf("OK\n");
-                        showallRecords(file);
+                        viewRecords(file);
                     }
                 } else {
-                    printf("Unknown command\n");
+                    printf("Unknown command");
                 }
+            } else if (strcmp(token, "INSERT") == 0) {
+                char *key;
+                char *value;
+                key = strtok(NULL, " ");
+                value = strtok(NULL, " ");
+                insertRecord(key,value);
+
             } else {
-                printf("Unknown command.\n");
+                printf("Unknown command.");
             }
         } else {
-            printf("No input found.\n");
+            printf("No input found.");
         }
     }
 
