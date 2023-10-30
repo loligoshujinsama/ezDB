@@ -26,7 +26,6 @@ void updateRecord(FILE *file) {
 }
 
 void viewRecords() {
-
     printf("There are in total %d records found:\n",records);
     for (int i = 0; i < records; i++) {
         printf("%s %.2f", db[i].occupation,db[i].salary);
@@ -45,6 +44,8 @@ void openRecords(FILE *file) {
 int main() {
     FILE *file = NULL;
     char command[256];
+    char command_2[256];
+
     declaration();
     printf("Welcome to ezDB v1.0.1");
 
@@ -52,9 +53,9 @@ int main() {
         printf("\n> ");
         fgets(command,sizeof(command),stdin);
         command[strcspn(command, "\n")] = '\0';
+        strcpy(command_2,command);
 
         char *token = strtok(command, " ");
-
         if (token != NULL) {
             // OPTION 1: OPEN
             if (strcmp(token,"OPEN") == 0) {
@@ -85,8 +86,9 @@ int main() {
                 } else {
                     printf("Unknown command");
                 }
+            // OPTION 3: INSERT
             } else if (strcmp(token, "INSERT") == 0) {
-                printf("OK.");
+
             }
         } else {
             printf("No input found.");
