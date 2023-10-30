@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "declaration.c"
 
 #define MAX_RECORDS 255
@@ -12,6 +13,22 @@ struct records {
 };
 
 struct records db[MAX_RECORDS];
+
+void removeSpace(char *word) {
+    int len = strlen(word);
+    while (len>0 && isspace(word[len-1])) {
+        word[len-1] = '\0';
+        len--;
+    }
+}
+
+void removeNL(char *word) {
+    char *new = word;
+    while (*new && isspace(*new)) {
+        new++;
+    }
+    memmove(word, new, strlen(new)+1);
+}
 
 void insertRecord(FILE *file) {
 }
@@ -28,13 +45,14 @@ void updateRecord(FILE *file) {
 void viewRecords() {
     printf("There are in total %d records found:\n",records);
     for (int i = 0; i < records; i++) {
-        printf("%s %.2f", db[i].occupation,db[i].salary);
+        printf("%s %.2f\n", db[i].occupation,db[i].salary);
     }
 }
 
 void openRecords(FILE *file) {
     int i = 0;
     while (fscanf(file, "%255[^\t] %f",db[i].occupation,&db[i].salary) == 2) {
+        removeNL(db[i].occupation);
         i++;
     }
     records = i; 
@@ -86,9 +104,7 @@ int main() {
                 } else {
                     printf("Unknown command");
                 }
-            // OPTION 3: INSERT
             } else if (strcmp(token, "INSERT") == 0) {
-
             }
         } else {
             printf("No input found.");
