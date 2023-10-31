@@ -16,18 +16,22 @@ struct records db[MAX_RECORDS];
 
 void removeSpace(char *word) {
     int len = strlen(word);
+    char *edit = word;
+
+    // iterates char by char as long as it satisfies isspace
+    // increment the pointer to start at next character instead
+    while (isspace(*edit) && *edit) {
+        edit++;
+    }
+    // copy start pointer of edit to original word
+    // number of bytes +1 to acommodate for NULL terminator
+    memmove(word, edit, strlen(edit)+1);
+
+    // remove the isspaces in front
     while (len>0 && isspace(word[len-1])) {
         word[len-1] = '\0';
         len--;
     }
-}
-
-void removeNL(char *word) {
-    char *new = word;
-    while (*new && isspace(*new)) {
-        new++;
-    }
-    memmove(word, new, strlen(new)+1);
 }
 
 void insertRecord(const char *occupation, float salary) {
@@ -64,7 +68,7 @@ void viewRecords() {
 void openRecords(FILE *file) {
     int i = 0;
     while (fscanf(file, "%255[^\t] %f",db[i].occupation,&db[i].salary) == 2) {
-        removeNL(db[i].occupation);
+        removeSpace(db[i].occupation);
         i++;
     }
     records = i; 
