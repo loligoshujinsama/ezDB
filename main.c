@@ -30,7 +30,19 @@ void removeNL(char *word) {
     memmove(word, new, strlen(new)+1);
 }
 
-void insertRecord(FILE *file) {
+void insertRecord(const char *occupation, float salary) {
+    if (records < MAX_RECORDS) {
+        if (strlen(occupation) < sizeof(db[0].occupation)) {
+            strcpy(db[records].occupation, occupation);
+            db[records].salary = salary;
+            records++;
+            printf("A new record of Key=%s, Value=%.2f is successfully inserted.", occupation, salary);
+        } else {
+            printf("Occupation is too long. Maximum length is %d characters.", sizeof(db[0].occupation) - 1);
+        }
+    } else {
+        printf("Database is full. Cannot add more records.");
+    }
 }
 
 void deleteRecord(FILE *file) {
@@ -58,6 +70,18 @@ void openRecords(FILE *file) {
     records = i; 
 }
 
+void saveRecords(const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (file != NULL) {
+        for (int i = 0; i < records; i++) {
+            fprintf(file, "%s %.2f\n", db[i].occupation, db[i].salary);
+        }
+        fclose(file);
+        printf("File %s has been saved.\n", filename);
+    } else {
+        printf("Error opening file for saving.\n");
+    }
+}
 
 int main() {
     FILE *file = NULL;
@@ -104,7 +128,34 @@ int main() {
                 } else {
                     printf("Unknown command");
                 }
+            // OPTION 3: INSERT
             } else if (strcmp(token, "INSERT") == 0) {
+                char *occupation = strtok(NULL, " ");
+                char *salaryStr = strtok(NULL, " ");
+
+                if (occupation != NULL && salaryStr != NULL) {
+                    float salary = atof(salaryStr);
+
+                    if (salary != 0.0) {
+                        if (file == NULL) {
+                            printf("Select a file first.");
+                        } else {
+                            insertRecord(occupation, salary);
+                        }
+                    } else {
+                        printf("Invalid salary format.\n");
+                    }
+                } else {
+                    printf("Invalid INSERT input format.");
+                }
+            // OPTION 4: SAVE
+            } else if (strcmp(token, "SAVE") == 0) {
+                char *filename = strtok(NULL, " ");
+                if (filename != NULL) {
+                    saveRecords(filename);
+                } else {
+                    printf("Invalid SAVE input format.");
+                }
             }
         } else {
             printf("No input found.");
