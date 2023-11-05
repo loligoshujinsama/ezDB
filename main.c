@@ -118,7 +118,7 @@ int main() {
     char command[256];
     char command_2[256];
 
-    declaration();
+    //declaration();
     printf("Welcome to ezDB v1.0.1");
 
     while (1) {
