@@ -41,13 +41,19 @@ void removeSpace(char* word) {
 void insertRecord(const char* occupation, float salary) {
     if (records < MAX_RECORDS) {
         if (strlen(occupation) < sizeof(db[0].occupation)) {
+            for (int i = 0; i < records; i++) {
+                if (strcmp(db[i].occupation, occupation) == 0) {
+                    printf("The record with Key=%s already exists in the database", occupation);
+                    return;
+                }
+            }
             strcpy(db[records].occupation, occupation);
             db[records].salary = salary;
             records++;
             printf("A new record of Key=%s, Value=%.2f is successfully inserted.", occupation, salary);
         }
         else {
-            printf("Occupation is too long. Maximum length is %d characters.", sizeof(db[0].occupation) - 1);
+            printf("Occupation name is too long. Maximum length is %d characters.", sizeof(db[0].occupation) - 1);
         }
     }
     else {
@@ -217,4 +223,3 @@ int main() {
 
     return 0;
 }
-
