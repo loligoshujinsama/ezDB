@@ -123,6 +123,7 @@ int main() {
     FILE* file = NULL;
     char command[256];
     char command_2[256];
+    char currentFile[256];
 
     //declaration();
     printf("Welcome to ezDB v1.0.1");
@@ -138,6 +139,7 @@ int main() {
             // OPTION 1: OPEN
             if (strcmp(token, "OPEN") == 0) {
                 char* filename = strtok(NULL, " ");
+                strcpy(currentFile, filename);
 
                 if (file != NULL) {
                     fclose(file);
@@ -154,8 +156,8 @@ int main() {
                         openRecords(file);
                     }
                 }
-                // OPTION 2: SHOW ALL
             }
+            // OPTION 2: SHOW ALL
             else if (strcmp(token, "SHOW") == 0) {
                 token = strtok(NULL, " ");
                 if (token != NULL && strcmp(token, "ALL") == 0) {
@@ -169,36 +171,32 @@ int main() {
                 else {
                     printf("Unknown command");
                 }
-                // OPTION 3: INSERT
             }
+            // OPTION 3: INSERT
             else if (strcmp(token, "INSERT") == 0) {
-                char* occupation = strtok(NULL, " ");
-                char* salaryStr = strtok(NULL, " ");
+                char occupation[255];
+                float salary;
 
-                if (occupation != NULL && salaryStr != NULL) {
-                    float salary = atof(salaryStr);
-
-                    if (salary != 0.0) {
-                        if (file == NULL) {
-                            printf("Select a file first.");
-                        }
-                        else {
-                            insertRecord(occupation, salary);
-                        }
-                    }
-                    else {
-                        printf("Invalid salary format.\n");
+                if (file == NULL) {
+                    printf("Select a file first.");
+                } else {
+                    if (sscanf(command_2, "INSERT %199[^0-9]%f", occupation, &salary) == 2) {
+                        removeSpace(occupation);
+                        insertRecord(occupation, salary);
+                    } else {
+                        printf("Invalid INSERT input format.");
                     }
                 }
-                else {
-                    printf("Invalid INSERT input format.");
-                }
-                // OPTION 4: SAVE
             }
+            // OPTION 4: SAVE
             else if (strcmp(token, "SAVE") == 0) {
                 char* filename = strtok(NULL, " ");
                 if (filename != NULL) {
-                    saveRecords(filename);
+                    if (strcmp(filename, currentFile) == 0) {
+                        saveRecords(currentFile);
+                    } else {
+                        printf("Invlid file name saved.");
+                    }
                 }
                 else {
                     printf("Invalid SAVE input format.");
