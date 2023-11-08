@@ -77,10 +77,10 @@ bool DisplayFromStruc(char occ[]) {
     return false;
 }
 
-void queryRecord(FILE* file ,char Occ) {
-    char OccToSearch[MAX_RECORDS] = Occ;
-    removeSpace(OccToSearch);
-    bool found = DisplayFromStruc(OccToSearch);
+void queryRecord(FILE* file ,char Occ[256]) {
+  
+    removeSpace(Occ);
+    bool found = DisplayFromStruc(Occ);
     printf("Data found? %s\n", found ? "Yes" : "No");
 }
 
@@ -212,7 +212,7 @@ int main() {
                 else {
                     // excecute query mode
                     char occupation[256];
-                    if (sscanf(command_2, "QUERY %199[^0-9]%f", occupation) == 1) {
+                    if (sscanf(command_2, "QUERY %199[^0-9]", occupation) == 1) {
                         queryRecord(file , occupation);
                         
                     }
