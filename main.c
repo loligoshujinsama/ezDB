@@ -77,10 +77,8 @@ bool DisplayFromStruc(char occ[]) {
     return false;
 }
 
-void queryRecord(FILE* file) {
-    char OccToSearch[MAX_RECORDS];
-    printf("Enter occupation to search:");
-    fgets(OccToSearch, MAX_RECORDS, stdin);
+void queryRecord(FILE* file ,char Occ) {
+    char OccToSearch[MAX_RECORDS] = Occ;
     removeSpace(OccToSearch);
     bool found = DisplayFromStruc(OccToSearch);
     printf("Data found? %s\n", found ? "Yes" : "No");
@@ -179,11 +177,13 @@ int main() {
 
                 if (file == NULL) {
                     printf("Select a file first.");
-                } else {
+                }
+                else {
                     if (sscanf(command_2, "INSERT %199[^0-9]%f", occupation, &salary) == 2) {
                         removeSpace(occupation);
                         insertRecord(occupation, salary);
-                    } else {
+                    }
+                    else {
                         printf("Invalid INSERT input format.");
                     }
                 }
@@ -194,7 +194,8 @@ int main() {
                 if (filename != NULL) {
                     if (strcmp(filename, currentFile) == 0) {
                         saveRecords(currentFile);
-                    } else {
+                    }
+                    else {
                         printf("Invlid file name saved.");
                     }
                 }
@@ -205,12 +206,17 @@ int main() {
             // OPTION 5: Query
             else if (strcmp(token, "QUERY") == 0) {
                 token = strtok(NULL, " ");
-                if (token != NULL && strcmp(token, "ALL") == 0) {
+                if (file == NULL) {
                     printf("Select a file first.");
                 }
                 else {
                     // excecute query mode
-                    queryRecord(file);
+                    char occupation[256];
+                    if (sscanf(command_2, "QUERY %199[^0-9]%f", occupation) == 1) {
+                        queryRecord(file , occupation);
+                        
+                    }
+                   
                 }
             }
         }
