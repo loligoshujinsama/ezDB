@@ -67,20 +67,19 @@ bool DisplayFromStruc(char occ[]) {
     for (int i = 0; i < 255; i++) {
         if (strcmp(db[i].occupation, occ) == 0) {
             printf("A record of %s ", db[i].occupation);
-            printf("%f is found in the database. \n", db[i].salary);
+            printf("%.2f is found in the database. \n", db[i].salary);
             return true;
         }
     }
-    printf("“There is no record with %s found in the database. \n", occ);
+    printf("There is no record with %s found in the database. \n", occ);
     
     return false;
 }
 
 void queryRecord(char Occ[256]) {
   
-    removeSpace(Occ);
+    //removeSpace(Occ);
     bool found = DisplayFromStruc(Occ);
-    printf("Data found? %s\n", found ? "Yes" : "No");
 }
 
 void updateRecord(FILE* file) {
@@ -178,6 +177,7 @@ int main() {
                     printf("Select a file first.");
                 }
                 else {
+                    //QUERY test test
                     if (sscanf(command_2, "INSERT %199[^0-9]%f", occupation, &salary) == 2) {
                         removeSpace(occupation);
                         insertRecord(occupation, salary);
@@ -213,9 +213,9 @@ int main() {
                     char occupation[256];
                     if (sscanf(command_2, "QUERY %199[^0-9]", occupation) == 1) {
                         queryRecord(occupation);
-                        
+                    } else {
+                        printf("Invalid QUERY input format.");
                     }
-                   
                 }
             }
         }
