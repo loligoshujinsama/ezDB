@@ -66,14 +66,13 @@ void deleteRecord(FILE* file) {
 bool DisplayFromStruc(char occ[]) {
     for (int i = 0; i < 255; i++) {
         if (strcmp(db[i].occupation, occ) == 0) {
-            printf("Occupation Details:\n");
-            printf("Occupation: %s \n", db[i].occupation);
-            printf("Salary: %f \n", db[i].salary);
+            printf("A record of %s ", db[i].occupation);
+            printf("%f is found in the database. \n", db[i].salary);
             return true;
         }
     }
-    printf("Occupation %s", occ);
-    printf(" not found.\n");
+    printf("“There is no record with %s found in the database. \n", occ);
+    
     return false;
 }
 
