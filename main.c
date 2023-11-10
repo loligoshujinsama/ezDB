@@ -67,11 +67,11 @@ bool DisplayFromStruc(char occ[]) {
     for (int i = 0; i < 255; i++) {
         if (strcmp(db[i].occupation, occ) == 0) {
             printf("A record of Key=%s, ", db[i].occupation);
-            printf("Value=%.2f is found in the database. \n", db[i].salary);
+            printf("Value=%.2f is found in the database.\n", db[i].salary);
             return true;
         }
     }
-    printf("There is no record with Key=%s found in the database. \n", occ);
+    printf("There is no record with Key=%s found in the database.\n", occ);
     
     return false;
 }
