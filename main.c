@@ -81,7 +81,23 @@ void queryRecord(char Occ[256]) {
     bool found = DisplayFromStruc(Occ);
 }
 
-void updateRecord(FILE* file) {
+void updateRecord(char* occupation, float salary) {
+    int result = -1;
+    for (int i = 0; i < records; i++) {
+        if (strcmp(db[i].occupation, occupation) == 0) {
+            result = i;
+            if (db[i].salary == salary) {
+                printf("The salary for this occupation Key=%s is already the same!\n", occupation);
+                return; 
+            }
+        }
+    }
+    if (result == -1) {
+        printf("There is no record with Key=%s foudn in the database.\n", occupation);
+    } else {
+        db[result].salary = salary;
+        printf("The value for the record of Key=%s is successfully updated.\n", occupation);
+    }
 }
 
 void viewRecords() {
@@ -119,6 +135,8 @@ int main() {
     char command[256];
     char command_2[256];
     char currentFile[256];
+    char occupation[255];
+    float salary;
 
     //declaration();
     printf("Welcome to ezDB v1.0.1");
@@ -214,6 +232,24 @@ int main() {
                         queryRecord(occupation);
                     } else {
                         printf("Invalid QUERY input format.");
+                    }
+                }
+            }
+            // OPTION 6: UPDATE
+            else if (strcmp(token, "UPDATE") == 0) {
+                if (file == NULL) {
+                    printf("Select a file first.");
+                } 
+                else {
+                    if (sscanf(command_2, "UPDATE %199[^0-9]%f",occupation, &salary) == 2) {
+                        if (occupation != NULL || salary != 0.0) {
+                            removeSpace(occupation);
+                            updateRecord(occupation, salary);
+                        } else {
+                            printf("Invalid salary format.\n");
+                        }
+                    } else {
+                        printf("Invalid UPDATE format");
                     }
                 }
             }
