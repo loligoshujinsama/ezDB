@@ -120,7 +120,10 @@ int main() {
                     printf("Select a file first.");
                 } else {
                     char *filename = strtok(NULL, " ");
-                    if (strcmp(filename2,filename) == 0) {   
+                    if(filename == NULL){
+                        printf("Please give a valid filename");
+                    }
+                    else if (strcmp(filename2,filename) == 0) {   
                         saveRecords(filename2);
                     } else {
                         printf("Error. Must be the same file you opened.");
