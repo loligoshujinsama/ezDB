@@ -65,7 +65,7 @@ void deleteRecord(FILE* file) {
 }
 bool DisplayFromStruc(char occ[]) {
     for (int i = 0; i < 255; i++) {
-        if (db[i].occupation == occ) {
+        if (strcmp(db[i].occupation, occ) == 0) {
             printf("Occupation Details:\n");
             printf("Occupation: %s \n", db[i].occupation);
             printf("Salary: %f \n", db[i].salary);
@@ -77,7 +77,7 @@ bool DisplayFromStruc(char occ[]) {
     return false;
 }
 
-void queryRecord(FILE* file ,char Occ[256]) {
+void queryRecord(char Occ[256]) {
   
     removeSpace(Occ);
     bool found = DisplayFromStruc(Occ);
@@ -213,7 +213,7 @@ int main() {
                     // excecute query mode
                     char occupation[256];
                     if (sscanf(command_2, "QUERY %199[^0-9]", occupation) == 1) {
-                        queryRecord(file , occupation);
+                        queryRecord(occupation);
                         
                     }
                    
