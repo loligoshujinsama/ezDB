@@ -7,39 +7,37 @@
 
 int main() {
     FILE *file = NULL;
-    char filename2[256],command[256],command_2[256],key[256];
+    char filename2[256],command[256],command_2[256],key[256]; // 255 char, 1 NULL
     float value;
 
     declaration();
-    printf("Welcome to ezDB v3.0");
+    printf("Welcome to ezDB v3.0 - HELP for commands");
 
     while (1) {
         printf("\n> ");
         fgets(command,sizeof(command),stdin);
         command[strcspn(command, "\n")] = '\0';
-        strcpy(command_2,command);
 
+        strcpy(command_2,command);
         char *token = strtok(command, " ");
         if (token != NULL) {
             // OPTION 1: OPEN
+            /* Uses fopen to open file. If there is already 1 file OPEN'd, close and OPEN new.
+               fopen mode ab+ instead of w+, want to preserve existing data (w+ wipes). */
             if (strcmp(token,"OPEN") == 0) {
                 char *filename = strtok(NULL, " ");
                 strcpy(filename2,filename);
-
                 if (file != NULL) {
                     fclose(file);
+                    printf("Closing existing file...\n");
                     file = NULL;
-                    printf("Closing existing file... Run command again.");
+                }
+                if (fileExists(filename)) {
+                    file = fopen(filename, "ab+");
+                    printf("Working on database file: %s", filename);
+                    openRecords(file);
                 } else {
-                    // <unistd.h> has access
-                    file = fopen(filename, "r");
-                    if (file != NULL) {
-                        file = fopen(filename, "ab+");
-                        printf("Working on database file: %s",filename);
-                        openRecords(file);
-                    } else {
-                        printf("File don't exist");
-                    }
+                    printf("File doesn't exist, please OPEN an existing file.");
                 }
 
             // OPTION 2: SHOW ALL
@@ -52,7 +50,7 @@ int main() {
                         viewRecords(file);
                     }
                 } else {
-                    printf("Unknown command, do you mean SHOW ALL?");
+                    printf("Invalid SHOW ALL format.");
                 }
 
             // OPTION 3: INSERT
@@ -66,7 +64,7 @@ int main() {
                         insertRecord(key, value);
                     }
                     else {
-                        printf("Invalid INSERT input format.");
+                        printf("Invalid INSERT format.");
                     }
                 }
 
@@ -81,7 +79,7 @@ int main() {
                     if (sscanf(command_2, "QUERY %199[^0-9]", key) == 1) {
                         queryRecord(key);
                     } else {
-                        printf("Invalid QUERY input format.");
+                        printf("Invalid QUERY format.");
                     }
                 }
             
@@ -92,7 +90,7 @@ int main() {
                 } 
                 else {
                     if (sscanf(command_2, "UPDATE %199[^0-9]%f",key, &value) == 2) {
-                        if (key != NULL || value != 0.0) {
+                        if (strlen(key) > 0 || value != 0.0) {
                             removeSpace(key);
                             updateRecord(key, value);
                         } else {
@@ -120,15 +118,23 @@ int main() {
                     printf("Select a file first.");
                 } else {
                     char *filename = strtok(NULL, " ");
-                    if(filename == NULL){
+                    if (filename == NULL) {
                         printf("Please give a valid filename");
-                    }
-                    else if (strcmp(filename2,filename) == 0) {   
+                    } else if (strcmp(filename2,filename) == 0) {   
                         saveRecords(filename2);
                     } else {
-                        printf("Error. Must be the same file you opened.");
+                        printf("Error saving file. Must be the same file you opened.");
                     }
                 }
+
+            // OPTION 8: HELP
+            } else if (strcmp(token, "HELP") == 0) {
+                help();
+
+            // OPTION 9: EXIT
+            } else if (strcmp(token, "EXIT") == 0) {
+                printf("Have a nice day.");
+                break;
 
             } else {
                 printf("Invalid command");
