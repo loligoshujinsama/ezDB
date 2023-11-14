@@ -64,21 +64,23 @@ void insertRecord(const char* occupation, float salary) {
 }
 
 void deleteRecord(char *key) {
-    int deletedCount = 0;
+    int deleted = 0;     // delete flag
 
     for (int i = 0; i < records; i++) {
         if (strcmp(db[i].occupation, key) == 0) {
+            // User's deletion choice found in db
             for (int j = i; j < records - 1; j++) {
+                //Replace the current field with the field that comes after and so on
                 strcpy(db[j].occupation, db[j + 1].occupation);
                 db[j].salary = db[j + 1].salary;
             }
             records--;
-            deletedCount++;
+            deleted++; 
             i--; 
         }
     }
 
-    if (deletedCount > 0) {
+    if (deleted) {
         printf("'%s' deleted successfully.\n", key);
     }
     else {
