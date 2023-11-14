@@ -2,16 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <io.h>
 
 #define MAX_RECORDS 255
 int records = 0;
 
 struct records {
-    char occupation[256];
+    char occupation[200];
     float salary;
 };
 
 struct records db[MAX_RECORDS];
+
+int fileExists(const char *filename) {
+    return _access(filename, 0) == 0;
+}
 
 void removeSpace(char *word) {
     int len = strlen(word);
@@ -22,6 +27,7 @@ void removeSpace(char *word) {
     while (isspace(*edit) && *edit) {
         edit++;
     }
+
     // copy start pointer of edit to original word
     // number of bytes +1 to acommodate for NULL terminator
     memmove(word, edit, strlen(edit)+1);
@@ -48,7 +54,8 @@ void insertRecord(const char* occupation, float salary) {
             printf("A new record of Key=%s, Value=%.2f is successfully inserted.", occupation, salary);
         }
         else {
-            printf("Occupation name is too long. Maximum length is %d characters.", sizeof(db[0].occupation) - 1);
+            // Using sizeof will need to use %zu - z for sizeof arguments, u for unsigned integers
+            printf("Occupation name is too long. Maximum length is %zu characters.", sizeof(db[0].occupation) - 1);
         }
     }
     else {
@@ -142,4 +149,17 @@ void saveRecords(const char *filename) {
     printf("Successfully saved into %s",filename); 
     fclose(file);
 
+}
+
+void help() {
+    printf("Available options:\n");
+    printf("  OPEN <filename>       - Open a database file for reading and writing.\n");
+    printf("  SHOW ALL              - Display all records in the currently opened file.\n");
+    printf("  INSERT <key> <value>  - Insert a new record with the specified key and value.\n");
+    printf("  QUERY <key>           - Display information for the record with the specified key.\n");
+    printf("  UPDATE <key> <value>  - Update the value of the record with the specified key.\n");
+    printf("  DELETE <key>          - Delete the record with the specified key.\n");
+    printf("  SAVE <filename>       - Save the records to the specified file.\n");
+    printf("  HELP                  - Display this help message.\n");
+    printf("  EXIT                  - Exit the program.\n");
 }
