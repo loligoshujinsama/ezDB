@@ -15,7 +15,18 @@ struct records {
 struct records db[MAX_RECORDS];
 
 int fileExists(const char *filename) {
-    return _access(filename, 0) == 0;
+    // Check if the file exists
+    if (_access(filename, 0) != 0) {
+        return 0;
+    }
+
+    // Check if the file has a .txt extension
+    char *extension = strrchr(filename, '.');
+    if (extension != NULL && strcmp(extension, ".txt") == 0) {
+        return 1;
+    }
+
+    return 0;
 }
 
 void removeSpace(char *word) {
