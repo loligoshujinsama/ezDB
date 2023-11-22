@@ -22,8 +22,6 @@ int main() {
         char *token = strtok(command, " ");
         if (token != NULL) {
             // OPTION 1: OPEN
-            /* Uses fopen to open file. If there is already 1 file OPEN'd, close and OPEN new.
-               fopen mode ab+ instead of w+, want to preserve existing data (w+ wipes). */
             if (strcmp(token,"OPEN") == 0) {
                 char *filename = strtok(NULL, " ");
                 strcpy(filename2,filename);
@@ -33,9 +31,14 @@ int main() {
                     file = NULL;
                 }
                 if (fileExists(filename)) {
-                    file = fopen(filename, "ab+");
-                    printf("Working on database file: %s", filename);
-                    openRecords(file);
+                    char *extension = strrchr(filename, '.');
+                    if (extension != NULL && strcmp(extension, ".txt") == 0) {
+                        file = fopen(filename, "ab+");
+                        printf("Working on database file: %s", filename);
+                        openRecords(file);
+                    } else {
+                        printf("Invalid file type. Please provide a .txt file.\n");
+                    }
                 } else {
                     printf("File doesn't exist, please OPEN an existing file.");
                 }
