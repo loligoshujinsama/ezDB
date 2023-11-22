@@ -32,19 +32,14 @@ int main() {
                         file = NULL;
                     }
                     if (fileExists(filename)) {
-                        char *extension = strrchr(filename, '.');
-                        if (extension != NULL && strcmp(extension, ".txt") == 0) {
-                            file = fopen(filename, "ab+");
-                            printf("Working on database file: %s", filename);
-                            openRecords(file);
-                        } else {
-                            printf("Invalid file type. Please provide a .txt file.\n");
-                        }
+                        file = fopen(filename, "ab+");
+                        printf("Working on database file: %s", filename);
+                        openRecords(file);
                     } else {
-                        printf("File doesn't exist, please OPEN an existing file.");
+                        printf("File doesn't exist or is not a .txt file. Please OPEN an existing .txt file.\n");
                     }
                 } else {
-                    printf("Please provide a filename.");
+                    printf("Please provide a filename.\n");
                 }
 
             // OPTION 2: SHOW ALL
