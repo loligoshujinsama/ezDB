@@ -24,23 +24,27 @@ int main() {
             // OPTION 1: OPEN
             if (strcmp(token,"OPEN") == 0) {
                 char *filename = strtok(NULL, " ");
-                strcpy(filename2,filename);
-                if (file != NULL) {
-                    fclose(file);
-                    printf("Closing existing file...\n");
-                    file = NULL;
-                }
-                if (fileExists(filename)) {
-                    char *extension = strrchr(filename, '.');
-                    if (extension != NULL && strcmp(extension, ".txt") == 0) {
-                        file = fopen(filename, "ab+");
-                        printf("Working on database file: %s", filename);
-                        openRecords(file);
+                if (filename != NULL) {
+                    strcpy(filename2,filename);
+                    if (file != NULL) {
+                        fclose(file);
+                        printf("Closing existing file...\n");
+                        file = NULL;
+                    }
+                    if (fileExists(filename)) {
+                        char *extension = strrchr(filename, '.');
+                        if (extension != NULL && strcmp(extension, ".txt") == 0) {
+                            file = fopen(filename, "ab+");
+                            printf("Working on database file: %s", filename);
+                            openRecords(file);
+                        } else {
+                            printf("Invalid file type. Please provide a .txt file.\n");
+                        }
                     } else {
-                        printf("Invalid file type. Please provide a .txt file.\n");
+                        printf("File doesn't exist, please OPEN an existing file.");
                     }
                 } else {
-                    printf("File doesn't exist, please OPEN an existing file.");
+                    printf("Please provide a filename.");
                 }
 
             // OPTION 2: SHOW ALL
