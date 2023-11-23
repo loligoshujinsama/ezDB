@@ -124,7 +124,11 @@ int main() {
                     printf("Invalid DELETE input format");
                 } else {
                     char *key = strtok(NULL, "");
-                    deleteRecord(key);
+                     if (key!= NULL){
+                        deleteRecord(key);
+                     } else{
+                         printf("Invalid DELETE format");
+                     }
                 }
 
             // OPTION 7: SAVE
