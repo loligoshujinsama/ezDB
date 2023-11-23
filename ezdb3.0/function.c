@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <io.h>
 
-#define MAX_RECORDS 255
+#define MAX_RECORDS 1000
 int records = 0;
 
 struct records {
@@ -21,6 +21,7 @@ int fileExists(const char *filename) {
     }
 
     // Check if the file has a .txt extension
+    // 1 - successful, 0 - not successful
     char *extension = strrchr(filename, '.');
     if (extension != NULL && strcmp(extension, ".txt") == 0) {
         return 1;
@@ -33,17 +34,13 @@ void removeSpace(char *word) {
     int len = strlen(word);
     char *edit = word;
 
-    // iterates char by char as long as it satisfies isspace
-    // increment the pointer to start at next character instead
+    // Remove leading (first char) spaces
     while (isspace(*edit) && *edit) {
         edit++;
     }
-
-    // copy start pointer of edit to original word
-    // number of bytes +1 to acommodate for NULL terminator
     memmove(word, edit, strlen(edit)+1);
 
-    // remove the isspaces in front
+    // Remove trailing (last char) spaces
     while (len>0 && isspace(word[len-1])) {
         word[len-1] = '\0';
         len--;
@@ -92,10 +89,9 @@ void deleteRecord(char *key) {
     }
 
     if (deleted) {
-        printf("'%s' deleted successfully.\n", key);
-    }
-    else {
-        printf("No record containing '%s' found.\n", key);
+        printf("'%s' deleted successfully.", key);
+    } else {
+        printf("No record containing '%s' found.", key);
     }
 }
 
@@ -105,11 +101,11 @@ void queryRecord(char occ[]) {
         if (strcmp(db[i].occupation, occ) == 0) {
             flag = 1;
             printf("A record of Key=%s, ", db[i].occupation);
-            printf("Value=%.2f is found in the database.\n", db[i].salary);
+            printf("Value=%.2f is found in the database.", db[i].salary);
         }
     }
     if (flag == 0) {
-        printf("There is no record with Key=%s found in the database.\n", occ);
+        printf("There is no record with Key=%s found in the database.", occ);
     }
 }
 
@@ -119,16 +115,16 @@ void updateRecord(char* occupation, float salary) {
         if (strcmp(db[i].occupation, occupation) == 0) {
             result = i;
             if (db[i].salary == salary) {
-                printf("The salary for this occupation Key=%s is already the same!\n", occupation);
+                printf("The salary for this occupation Key=%s is already the same!", occupation);
                 return; 
             }
         }
     }
     if (result == -1) {
-        printf("There is no record with Key=%s foudn in the database.\n", occupation);
+        printf("There is no record with Key=%s found in the database.", occupation);
     } else {
         db[result].salary = salary;
-        printf("The value for the record of Key=%s is successfully updated.\n", occupation);
+        printf("The value for the record of Key=%s is successfully updated.", occupation);
     }
 }
 
@@ -137,7 +133,7 @@ void viewRecords() {
     for (int i = 0; i < records; i++) {
         printf("%s %.2f\n", db[i].occupation,db[i].salary);
     }
-    printf("END OF RECORDS");
+    printf("---End of records---");
 }
 
 void openRecords(FILE *file) {
