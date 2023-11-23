@@ -14,10 +14,18 @@ int main() {
     printf("Welcome to ezDB v3.0 - HELP for commands");
 
     while (1) {
+        // User input and remove newline
         printf("\n> ");
         fgets(command,sizeof(command),stdin);
-        command[strcspn(command, "\n")] = '\0';
 
+        // Handle when user input more than 255 characters
+        // Remove extra characters from stdin (input stream)
+        if (command[strlen(command) - 1] != '\n') {
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF);
+        }
+
+        command[strcspn(command, "\n")] = '\0';
         strcpy(command_2,command);
         char *token = strtok(command, " ");
         if (token != NULL) {
@@ -26,22 +34,26 @@ int main() {
                 char *filename = strtok(NULL, " ");
                 if (filename != NULL) {
                     strcpy(filename2,filename);
+
+                    // Close existing file if exists
                     if (file != NULL) {
                         fclose(file);
                         printf("Closing existing file...\n");
                         file = NULL;
                     }
+
+                    // Open file
                     if (fileExists(filename)) {
                         file = fopen(filename, "ab+");
                         printf("Working on database file: %s", filename);
                         openRecords(file);
                     } else {
-                        printf("File doesn't exist or is not a .txt file. Please OPEN an existing .txt file.\n");
+                        printf("File doesn't exist or is not a .txt file. Please OPEN an existing .txt file.");
                     }
                 } else {
-                    printf("Please provide a filename.\n");
+                    printf("Please provide a filename.");
                 }
-
+                
             // OPTION 2: SHOW ALL
             } else if (strcmp(token, "SHOW") == 0) {
                 token = strtok(NULL, " ");
@@ -61,12 +73,13 @@ int main() {
                     printf("Select a file first.");
                 }
                 else {
-                    if (sscanf(command_2, "INSERT %199[^0-9]%f", key, &value) == 2) {
+                    // Scan for key and value based on format
+                    if (sscanf(command_2, "INSERT %199[^-0-9]%f", key, &value) == 2 && strlen(key) > 0 && value >= 0.0) {
                         removeSpace(key);
                         insertRecord(key, value);
                     }
                     else {
-                        printf("Invalid INSERT format.");
+                        printf("Invalid INSERT format");
                     }
                 }
 
@@ -77,11 +90,11 @@ int main() {
                     printf("Select a file first.");
                 }
                 else {
-                    // excecute query mode
+                    // Scan for key based on format
                     if (sscanf(command_2, "QUERY %199[^0-9]", key) == 1) {
                         queryRecord(key);
                     } else {
-                        printf("Invalid QUERY format.");
+                        printf("Invalid QUERY format");
                     }
                 }
             
@@ -91,12 +104,12 @@ int main() {
                     printf("Select a file first.");
                 } 
                 else {
-                    if (sscanf(command_2, "UPDATE %199[^0-9]%f",key, &value) == 2) {
-                        if (strlen(key) > 0 || value != 0.0) {
+                    if (sscanf(command_2, "UPDATE %199[^-0-9]%f",key, &value) == 2) {
+                        if (strlen(key) > 0 && value >= 0.0) {
                             removeSpace(key);
                             updateRecord(key, value);
                         } else {
-                            printf("Invalid salary format.\n");
+                            printf("Invalid salary format.");
                         }
                     } else {
                         printf("Invalid UPDATE format");
